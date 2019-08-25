@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     const checkMobile = (rule, value, callback) => {
@@ -65,6 +66,7 @@ export default {
         if (valid) {
           this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
             .then(res => {
+              store.setUser(res.data.data)
               this.$router.push('/')
             })
             .catch(() => {
