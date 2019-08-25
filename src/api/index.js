@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 
 // 设置基准地址
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
@@ -12,7 +13,19 @@ axios.interceptors.request.use(function (config) {
   return config
 }, function (err) {
   return Promise.reject(err)
-}
-)
+})
+
+// 响应拦截器
+axios.interceptors.response.use(res => res, err => {
+  // 获取状态码
+  const status = err.response.status
+  if (status === 401) {
+    // 清除无效token
+    store.delUser()
+    // 跳转到登录页面
+    router.push('/login')
+  }
+  return Promise.reject(err)
+})
 
 export default axios
