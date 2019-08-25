@@ -7,7 +7,7 @@ export default {
   },
   // 获取存储对象
   getUser () {
-    const jsonStr = window.sessionStorage.getItem(KEY) || ''
+    const jsonStr = window.sessionStorage.getItem(KEY) || '{}'
     // JSON.parse(jsonStr) 把数据变成对象
     return JSON.parse(jsonStr)
   },
