@@ -47,7 +47,7 @@
         <span @click="toggleAside()" class="icon el-icon-s-fold"></span>
         <span class="text">江苏传智播客科技教育有限公司</span>
         <!-- 下拉菜单组件 -->
-        <el-dropdown class="my-dropdown">
+        <el-dropdown class="my-dropdown" @command="clickItem">
           <span class="el-dropdown-link">
             <img class="avatar" :src="photo" alt/>
             <span class="name">{{ name }}</span>
@@ -55,8 +55,11 @@
           </span>
           <!-- vue基础知识  插槽 -->
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <!-- 事件绑定 @事件.native="方法" 这是原生js方法
+            @click.native="setting()"
+            @click.native="logout()"-->
+            <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -80,6 +83,19 @@ export default {
   methods: {
     toggleAside () {
       this.isCollapse = !this.isCollapse
+    },
+    // 绑定的事件
+    clickItem (command) {
+      this[command]()
+    },
+    // 个人设置
+    setting () {
+      this.$router.push('/setting')
+    },
+    // 登出
+    logout () {
+      store.delUser()
+      this.$router.push('/login')
     }
   },
   created () {
