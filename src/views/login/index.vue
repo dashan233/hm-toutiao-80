@@ -62,16 +62,23 @@ export default {
   },
   methods: {
     login () {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
-            .then(res => {
-              store.setUser(res.data.data)
-              this.$router.push('/')
-            })
-            .catch(() => {
-              this.$message.error('手机号或者验证码有误')
-            })
+          // this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
+          //   .then(res => {
+          //     store.setUser(res.data.data)
+          //     this.$router.push('/')
+          //   })
+          //   .catch(() => {
+          //     this.$message.error('手机号或者验证码有误')
+          //   })
+          try {
+            const { data: { data } } = await this.$http.post('authorizations', this.loginForm)
+            store.setUser(data)
+            this.$router.push('/')
+          } catch (err) {
+            this.$message.error('手机号或者验证码错误')
+          }
         }
       })
     }
