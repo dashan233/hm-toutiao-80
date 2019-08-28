@@ -56,6 +56,9 @@
 import MyBread from '@/components/my-bread'
 export default {
   components: { MyBread },
+  created () {
+    this.getChannelOptions()
+  },
   data () {
     return {
       reqParams: {
@@ -88,6 +91,12 @@ export default {
           address: '上海市普陀区金沙江路 1516 弄'
         }
       ]
+    }
+  },
+  methods: {
+    async getChannelOptions () {
+      const { data: { data } } = await this.$http.get('channels')
+      this.channelOptions = data.channels
     }
   }
 }
