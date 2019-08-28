@@ -39,7 +39,7 @@
       </el-form>
     </el-card>
     <el-card>
-      <div slot="header">根据筛选条件查询到0条结果:</div>
+      <div slot="header">根据筛选条件查询到{{ total }}条结果:</div>
       <!-- 表格 -->
       <el-table :data="articles">
         <el-table-column prop="date" label="封面">
@@ -74,7 +74,16 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination class="pager" background layout="prev,pager,next" :total="1000"></el-pagination>
+      <el-pagination
+        class="pager"
+        background
+        layout="prev,pager,next"
+        :total="total"
+        :page-size="reqParams.per_page"
+        :current-page="reqParams.page"
+        style="text-align:center;"
+        @current-change="changePager"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -93,14 +102,21 @@ export default {
         status: null,
         channel_id: null,
         begin_pubdate: null,
-        end_pubdate: null
+        end_pubdate: null,
+        per_page: 20,
+        page: 1
       },
       channelOptions: [{}],
       dateArr: [],
-      articles: []
+      articles: [],
+      total: 0
     }
   },
   methods: {
+    changePager (newPage) {
+      this.reqParams.page = newPage
+      this.getArticles()
+    },
     async getChannelOptions () {
       const { data: { data } } = await this.$http.get('channels')
       this.channelOptions = data.channels
@@ -108,6 +124,7 @@ export default {
     async getArticles () {
       const { data: { data } } = await this.$http.get('articles', { params: this.reqParams })
       this.articles = data.results
+      this.total = data.total_count
     }
   }
 }
