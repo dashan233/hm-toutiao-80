@@ -41,10 +41,37 @@
     <el-card>
       <div slot="header">根据筛选条件查询到0条结果:</div>
       <!-- 表格 -->
-      <el-table :data="tableData">
-        <el-table-column prop="date" label="日期" width="180"></el-table-column>
-        <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
+      <el-table :data="articles">
+        <el-table-column prop="date" label="封面">
+          <template slot-scope="scope">
+            <el-image
+              :src="scope.row.cover.images[0]"
+              style="width:160px;height:100px;border:1px solid #ddd"
+              fit="contain"
+            >
+              <div slot="error" class="image-slot">
+                <img src="../../assets/images/error.gif" width="160" height="100" alt="">
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="标题"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 0" type="info">草稿</el-tag>
+            <el-tag v-if="scope.row.status === 1">待审核</el-tag>
+            <el-tag v-if="scope.row.status === 2" type="succes">审核通过</el-tag>
+            <el-tag v-if="scope.row.status === 3" type="warning">审核失败</el-tag>
+            <el-tag v-if="scope.row.status === 4" type="danger">已删除</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="pubdate" label="发布时间"></el-table-column>
+        <el-table-column label="操作" width="120px">
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
+            <el-button type="danger" @click="delArticles(scope.row.id)" icon="el-icon-delete" plain circle></el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <el-pagination class="pager" background layout="prev,pager,next" :total="1000"></el-pagination>
@@ -58,6 +85,7 @@ export default {
   components: { MyBread },
   created () {
     this.getChannelOptions()
+    this.getArticles()
   },
   data () {
     return {
@@ -67,36 +95,19 @@ export default {
         begin_pubdate: null,
         end_pubdate: null
       },
-      channelOptions: [{ id: 100, name: 'php' }],
+      channelOptions: [{}],
       dateArr: [],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      articles: []
     }
   },
   methods: {
     async getChannelOptions () {
       const { data: { data } } = await this.$http.get('channels')
       this.channelOptions = data.channels
+    },
+    async getArticles () {
+      const { data: { data } } = await this.$http.get('articles', { params: this.reqParams })
+      this.articles = data.results
     }
   }
 }
