@@ -38,6 +38,17 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <el-card>
+      <div slot="header">根据筛选条件查询到0条结果:</div>
+      <!-- 表格 -->
+      <el-table :data="tableData">
+        <el-table-column prop="date" label="日期" width="180"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+        <el-table-column prop="address" label="地址"></el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination class="pager" background layout="prev,pager,next" :total="1000"></el-pagination>
+    </el-card>
   </div>
 </template>
 
@@ -54,7 +65,29 @@ export default {
         end_pubdate: null
       },
       channelOptions: [{ id: 100, name: 'php' }],
-      dateArr: []
+      dateArr: [],
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
+      ]
     }
   }
 }
