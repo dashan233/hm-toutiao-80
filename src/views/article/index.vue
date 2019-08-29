@@ -60,6 +60,7 @@
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
+            <!-- <span>{{scope.row.id}}</span> -->
             <el-tag v-if="scope.row.status === 0" type="info">草稿</el-tag>
             <el-tag v-if="scope.row.status === 1">待审核</el-tag>
             <el-tag v-if="scope.row.status === 2" type="succes">审核通过</el-tag>
@@ -70,10 +71,10 @@
         <el-table-column prop="pubdate" label="发布时间"></el-table-column>
         <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
+            <el-button @click="$router.push('/publish?id='+scope.row.id)" type="primary" icon="el-icon-edit" plain circle></el-button>
             <el-button
               type="danger"
-              @click="delArticles(scope.row.id)"
+              @click="delArticle(scope.row.id)"
               icon="el-icon-delete"
               plain
               circle
@@ -133,6 +134,19 @@ export default {
         this.reqParams.begin_pubdate = null
         this.reqParams.end_pubdate = null
       }
+    },
+    delArticle (id) {
+      this.$confirm('此操作将永久删除改文章,是否继续', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete(`articles/${id}`)
+        this.$message.success('删除成功')
+        this.getArticles()
+      }).catch(() => {
+
+      })
     },
     search () {
       this.reqParams.page = 1

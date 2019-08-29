@@ -9,7 +9,11 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 // axios.defaults.headers.Authorization = `Bearer ${store.getUser().token}`
 
 axios.defaults.transformResponse = [(data) => {
-  return JSONBIG.parse(data)
+  try {
+    return JSONBIG.parse(data)
+  } catch (e) {
+    return data
+  }
 }]
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
