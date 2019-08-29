@@ -11,11 +11,11 @@
             <el-radio :label="0">草稿</el-radio>
             <el-radio :label="1">待审核</el-radio>
             <el-radio :label="2">审核通过</el-radio>
-            <el-radio :label="3">审核是失败</el-radio>
+            <el-radio :label="3">审核失败</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道: ">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <el-select clearable v-model="reqParams.channel_id" placeholder="请选择">
             <el-option
               v-for="item in channelOptions"
               :key="item.id"
