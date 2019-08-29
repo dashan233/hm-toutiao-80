@@ -31,10 +31,12 @@
             range-separator="至"
             start-placeholde="开始日期"
             end-placeholde="结束日期"
+            @change="changeDate"
+            value-format="yyyy-MM-dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="search">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -50,7 +52,7 @@
               fit="contain"
             >
               <div slot="error" class="image-slot">
-                <img src="../../assets/images/error.gif" width="160" height="100" alt="">
+                <img src="../../assets/images/error.gif" width="160" height="100" alt />
               </div>
             </el-image>
           </template>
@@ -69,7 +71,13 @@
         <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
-            <el-button type="danger" @click="delArticles(scope.row.id)" icon="el-icon-delete" plain circle></el-button>
+            <el-button
+              type="danger"
+              @click="delArticles(scope.row.id)"
+              icon="el-icon-delete"
+              plain
+              circle
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -117,12 +125,30 @@ export default {
       this.reqParams.page = newPage
       this.getArticles()
     },
+    changeDate (valueArr) {
+      if (valueArr) {
+        this.reqParams.begin_pubdate = valueArr[0]
+        this.reqParams.end_pubdate = valueArr[1]
+      } else {
+        this.reqParams.begin_pubdate = null
+        this.reqParams.end_pubdate = null
+      }
+    },
+    search () {
+      this.reqParams.page = 1
+      if (this.reqParams.channel_id === '') this.reqParams.channel_id = null
+      this.getArticles()
+    },
     async getChannelOptions () {
-      const { data: { data } } = await this.$http.get('channels')
+      const {
+        data: { data }
+      } = await this.$http.get('channels')
       this.channelOptions = data.channels
     },
     async getArticles () {
-      const { data: { data } } = await this.$http.get('articles', { params: this.reqParams })
+      const {
+        data: { data }
+      } = await this.$http.get('articles', { params: this.reqParams })
       this.articles = data.results
       this.total = data.total_count
     }

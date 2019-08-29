@@ -18,7 +18,7 @@
           <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form>
-          <el-button @click="login()" type="primary" style="width:100%">登 录</el-button>
+          <el-button @click="login()" type="primary" style="width:100%" @keyup.enter="login()">登 录</el-button>
         </el-form>
       </el-form>
     </el-card>
