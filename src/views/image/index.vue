@@ -11,13 +11,13 @@
                     <el-radio-button :lable="false">全部</el-radio-button>
                     <el-radio-button :label="true">收藏</el-radio-button>
                 </el-radio-group>
-                <el-button type="success" size="small" style="float:right;">添加素材</el-button>
+                <el-button @click="openDialog()" type="success" size="small" style="float:right;">添加素材</el-button>
             </div>
             <!-- 列表 -->
             <div class="img_list">
                 <div class="img_item" v-for="item in images" :key="item.id">
                     <img :src="item.url" alt="">
-                    <div class="footer">
+                    <div class="footer" v-if="!reqParams.collect">
                         <span @click="toggleStatus(item)" class="el-icon-star-off" :class="{red:item.is_collected}"></span>
                         <span @click="delImage(item.id)" class="el-icon-delete"></span>
                     </div>
@@ -33,11 +33,28 @@
               @current-change="changePager"
               hide-on-single-page
             ></el-pagination>
+            <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
+               <el-upload
+                  class="avatar-uploader"
+                  action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+                  :headers="headers"
+                  :show-file-list="false"
+                  :on-success="handleSuccess"
+                  name="image"
+                >
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+              </div>
+            </el-dialog>
         </el-card>
     </div>
 </template>
 
 <script>
+import store from '@/store'
 export default {
   created () {
     this.getImages()
@@ -50,13 +67,19 @@ export default {
         per_page: 10
       },
       images: [],
-      total: 0
+      total: 0,
+      dialogVisible: false,
+      imageUrl: null,
+      headers: {
+        Authorization: `Bearer ${store.getUser().token}`
+      }
     }
   },
   methods: {
     async getImages () {
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       this.images = data.results
+      this.total = data.total_count
     },
     async toggleStatus (item) {
       const { data: { data } } = await this.$http.put(`user/images/${item.id}`, {
@@ -84,6 +107,19 @@ export default {
         this.getImages()
       }).catch(() => {
       })
+    },
+    openDialog () {
+      this.dialogVisible = true
+      this.imageUrl = null
+    },
+    handleSuccess (res) {
+      this.$message.success('上传素材成功')
+      this.imageUrl = res.data.url
+      window.setTimeout(() => {
+        this.dialogVisible = false
+        this.reqParams.page = 1
+        this.getImages()
+      }, 500)
     }
   }
 }

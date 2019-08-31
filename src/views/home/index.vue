@@ -49,7 +49,7 @@
         <!-- 下拉菜单组件 -->
         <el-dropdown class="my-dropdown" @command="clickItem">
           <span class="el-dropdown-link">
-            <img class="avatar" :src="photo" alt/>
+            <img class="avatar1" :src="photo" alt/>
             <span class="name">{{ name }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
@@ -140,7 +140,7 @@ export default {
     }
     .my-dropdown {
       float: right;
-      .avatar {
+      .avatar1 {
         width: 30px;
         height: 30px;
         vertical-align: middle;
