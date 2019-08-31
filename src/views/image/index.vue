@@ -19,7 +19,7 @@
                     <img :src="item.url" alt="">
                     <div class="footer">
                         <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
-                        <span class="el-icon-delete"></span>
+                        <span @click="delImage(item.id)" class="el-icon-delete"></span>
                     </div>
                 </div>
             </div>
@@ -65,6 +65,18 @@ export default {
     toggleCollect () {
       this.reqParams.page = 1
       this.getImages()
+    },
+    delImage (id) {
+      this.$confirm('此操作将永久删除该图片,是否继续?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete(`user/images/${id}`)
+        this.$message.success('删除素材成功')
+        this.getImages()
+      }).catch(() => {
+      })
     }
   }
 }
