@@ -15,11 +15,11 @@
             </div>
             <!-- 列表 -->
             <div class="img_list">
-                <div class="img_item" v-for="item in 10" :key="item">
-                    <img src="../../assets/images/avatar.jpg" alt="">
+                <div class="img_item" v-for="item in images" :key="item.id">
+                    <img :src="item.url" alt="">
                     <div class="footer">
-                        <span class="el-icon-star-off"></span>
-                        <span class="el-icon-delte"></span>
+                        <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
+                        <span class="el-icon-delete"></span>
                     </div>
                 </div>
             </div>
@@ -31,13 +31,23 @@
 
 <script>
 export default {
+  created () {
+    this.getImages()
+  },
   data () {
     return {
       reqParams: {
         collect: false,
         page: 1,
         per_page: 10
-      }
+      },
+      images: []
+    }
+  },
+  methods: {
+    async getImages () {
+      const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
+      this.images = data.results
     }
   }
 }
@@ -47,8 +57,8 @@ export default {
 .img_list {
   margin-top: 20px;
   .img_item {
-    width: 160px;
-    height: 160px;
+    width: 275px;
+    height: 275px;
     border: 1px solid #ddd;
     position: relative;
     display: inline-block;
@@ -71,6 +81,9 @@ export default {
       text-align: center;
       span {
         margin: 0 20px;
+        &.red {
+          color: red;
+        }
       }
     }
   }
