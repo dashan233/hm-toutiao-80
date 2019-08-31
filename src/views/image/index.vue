@@ -18,7 +18,7 @@
                 <div class="img_item" v-for="item in images" :key="item.id">
                     <img :src="item.url" alt="">
                     <div class="footer">
-                        <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
+                        <span @click="toggleStatus(item)" class="el-icon-star-off" :class="{red:item.is_collected}"></span>
                         <span @click="delImage(item.id)" class="el-icon-delete"></span>
                     </div>
                 </div>
@@ -57,6 +57,13 @@ export default {
     async getImages () {
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       this.images = data.results
+    },
+    async toggleStatus (item) {
+      const { data: { data } } = await this.$http.put(`user/images/${item.id}`, {
+        collect: !item.is_collected
+      })
+      this.$message.success(data.collect ? '添加收藏成功' : '取消收藏成功')
+      item.is_collected = data.collect
     },
     changePager (newPage) {
       this.reqParams.page = newPage
