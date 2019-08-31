@@ -23,8 +23,8 @@
             v-model="dateArr"
             type="daterange"
             range-separator="至"
-            start-placeholde="开始日期"
-            end-placeholde="结束日期"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
             @change="changeDate"
             value-format="yyyy-MM-dd"
           ></el-date-picker>

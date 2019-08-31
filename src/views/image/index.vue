@@ -7,7 +7,7 @@
             </div>
             <!-- 按钮 -->
             <div class="btn_box">
-                <el-radio-group v-model="reqParams.collect" size="small">
+                <el-radio-group v-model="reqParams.collect" size="small" @change="toggleCollect">
                     <el-radio-button :lable="false">全部</el-radio-button>
                     <el-radio-button :label="true">收藏</el-radio-button>
                 </el-radio-group>
@@ -24,7 +24,15 @@
                 </div>
             </div>
             <!-- 分页 -->
-            <el-pagination background layout="prev,pager,next" :totak="1000"></el-pagination>
+            <el-pagination
+              background
+              layout="prev,pager,next"
+              :total="total"
+              :page-size="reqParams.per_page"
+              :current-page="reqParams.page"
+              @current-change="changePager"
+              hide-on-single-page
+            ></el-pagination>
         </el-card>
     </div>
 </template>
@@ -41,13 +49,22 @@ export default {
         page: 1,
         per_page: 10
       },
-      images: []
+      images: [],
+      total: 0
     }
   },
   methods: {
     async getImages () {
       const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
       this.images = data.results
+    },
+    changePager (newPage) {
+      this.reqParams.page = newPage
+      this.getImages()
+    },
+    toggleCollect () {
+      this.reqParams.page = 1
+      this.getImages()
     }
   }
 }
