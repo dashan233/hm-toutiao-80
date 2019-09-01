@@ -9,7 +9,9 @@
         <el-form-item label="标题:">
           <el-input v-model="articleForm.title" style="width:400px"></el-input>
         </el-form-item>
-        <el-form-item label="内容:">富文本</el-form-item>
+        <el-form-item label="内容:">
+          <quill-editor v-model="content" :options="editorOption"></quill-editor>
+        </el-form-item>
         <el-form-item label="封面:">
           <el-radio-group v-model="articleForm.cover.type">
             <el-radio :label="1">单图</el-radio>
@@ -27,7 +29,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary">发表</el-button>
-          <el-button>草稿</el-button>
+          <el-button>存入草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -35,7 +37,15 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
 export default {
+  components: {
+    quillEditor
+  },
   data () {
     return {
       articleForm: {
@@ -44,6 +54,18 @@ export default {
           type: 1
         },
         channel_id: null
+      },
+      editorOption: {
+        placeholder: '',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-blocck'],
+            [{ 'header': 1 }, { 'list': 'bullet' }],
+            [{ 'indent': 1 }, { 'indent': -1 }],
+            ['image']
+          ]
+        }
       }
     }
   }
