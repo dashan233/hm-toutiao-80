@@ -1,12 +1,34 @@
 <template>
     <div class="img-container">
-        <div class="img_btn">
+        <div class="img_btn" @click="openDialog">
             <img src="../assets/images/default.png" alt="">
         </div>
     <!-- 对话框 -->
         <el-dialog :visible.sync="dialogVisible" width="750px">
             <el-tabs v-model="activeName" type="card">
-                <el-tab-pane label="素材库" name="image">素材库内容</el-tab-pane>
+                <el-tab-pane label="素材库" name="image">
+                    <!-- radio按钮 -->
+                    <el-radio-group @change="toggleCollect" v-model="reqParams.collect" size="small">
+                        <el-button :label="false">全部</el-button>
+                        <el-button :label="true">收藏</el-button>
+                    </el-radio-group>
+                    <!-- 图片列表 -->
+                    <div class="img_list">
+                        <div class="img_item" v-for="item in images" :key="item.id">
+                            <img :src="item.url" alt="">
+                        </div>
+                    </div>
+                    <!-- 分页 -->
+                    <el-pagination
+                      background
+                      layout="prev,pager,next"
+                      :total="total"
+                      :page-size="reqParams.per_page"
+                      :current-page="reqParams.page"
+                      @current-change="changePager"
+                      hide-on-single-page
+                    ></el-pagination>
+                </el-tab-pane>
                 <el-tab-pane label="上传图片" name="upload">上传图片内容</el-tab-pane>
             </el-tabs>
             <span slot="footer" class="dialog-footer">
@@ -23,12 +45,36 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      activeName: 'image'
+      activeName: 'image',
+      reqParams: {
+        collect: false,
+        page: 1,
+        per_page: 8
+      },
+      images: [],
+      total: 0
     }
   },
   methods: {
     openDialog () {
       this.dialogVisible = true
+      this.getImages()
+    },
+    // 切换全部与收藏
+    toggleCollect () {
+      this.reqParams.page = 1
+      this.getImages()
+    },
+    // 分页
+    changePager (newPage) {
+      this.reqParams.page = newPage
+      this.getImages()
+    },
+    // 获取素材列表数据
+    async getImages () {
+      const { data: { data } } = await this.$http.get('/user/images', { params: this.reqParams })
+      this.images = data.results
+      this.total = data.total_count
     }
   }
 }
@@ -43,6 +89,16 @@ export default {
     width: 100%;
     height: 100%;
     display: block;
+  }
+}
+.img_list {
+  .img_item {
+    display: inline-block;
+    margin: 0 5px;
+    img {
+      width: 160px;
+      height: 120px;
+    }
   }
 }
 .dialog-footer {

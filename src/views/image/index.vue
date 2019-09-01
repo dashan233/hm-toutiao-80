@@ -8,7 +8,7 @@
             <!-- 按钮 -->
             <div class="btn_box">
                 <el-radio-group v-model="reqParams.collect" size="small" @change="toggleCollect">
-                    <el-radio-button :lable="false">全部</el-radio-button>
+                    <el-radio-button :label="false">全部</el-radio-button>
                     <el-radio-button :label="true">收藏</el-radio-button>
                 </el-radio-group>
                 <el-button @click="openDialog()" type="success" size="small" style="float:right;">添加素材</el-button>
