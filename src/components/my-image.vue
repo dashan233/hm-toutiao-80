@@ -35,7 +35,19 @@
             hide-on-single-page
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="上传图片" name="upload">上传图片内容</el-tab-pane>
+        <el-tab-pane label="上传图片" name="upload">
+          <el-upload
+            class="avatar-uploader"
+            action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            name="image"
+          >
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar" alt="">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -46,6 +58,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   name: 'my-image',
   data () {
@@ -59,10 +72,18 @@ export default {
       },
       images: [],
       total: 0,
-      selectedImageUrl: null
+      selectedImageUrl: null,
+      headers: {
+        Authorization: `Bearer ${store.getUser().token}`
+      },
+      uploadImageUrl: null
     }
   },
   methods: {
+    handleSuccess (res) {
+      this.$message.success('上传图片成功')
+      this.uploadImageUrl = res.data.url
+    },
     openDialog () {
       this.dialogVisible = true
       this.getImages()
