@@ -10,7 +10,7 @@
           <el-input v-model="articleForm.title" style="width:400px"></el-input>
         </el-form-item>
         <el-form-item label="内容:">
-          <quill-editor v-model="content" :options="editorOption"></quill-editor>
+          <quill-editor v-model="articleForm.content" :options="editorOption"></quill-editor>
         </el-form-item>
         <el-form-item label="封面:">
           <el-radio-group v-model="articleForm.cover.type">
@@ -48,6 +48,7 @@ export default {
     return {
       articleForm: {
         title: '',
+        content: '',
         cover: {
           type: 1
         },
@@ -58,7 +59,7 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote', 'code-blocck'],
+            ['blockquote', 'code-block'],
             [{ 'header': 1 }, { 'list': 'bullet' }],
             [{ 'indent': 1 }, { 'indent': -1 }],
             ['image']
