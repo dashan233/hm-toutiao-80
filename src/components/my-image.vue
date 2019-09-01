@@ -51,13 +51,14 @@
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmImage">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import defaultImage from '../assets/images/default.png'
 import store from '@/store'
 export default {
   name: 'my-image',
@@ -76,10 +77,23 @@ export default {
       headers: {
         Authorization: `Bearer ${store.getUser().token}`
       },
-      uploadImageUrl: null
+      uploadImageUrl: null,
+      confirmSrc: defaultImage
     }
   },
   methods: {
+    confirmImage () {
+      let src = null
+      if (this.activeName === 'image') {
+        if (!this.selectedImageUrl) return this.$message.info('请选择图片')
+        src = this.selectedImageUrl
+      } else {
+        if (!this.uploadImageUrl) return this.$message.info('请上传图片')
+        src = this.uploadImageUrl
+      }
+      this.confirmSrc = src
+      this.dialogVisible = false
+    },
     handleSuccess (res) {
       this.$message.success('上传图片成功')
       this.uploadImageUrl = res.data.url
