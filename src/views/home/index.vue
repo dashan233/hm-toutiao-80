@@ -107,6 +107,9 @@ export default {
     eventBus.$on('updateName', (name) => {
       this.name = name
     })
+    eventBus.$on('updatePhoto', (photo) => {
+      this.photo = photo
+    })
   }
 }
 </script>
