@@ -21,7 +21,7 @@
                             <el-input v-model="userInfo.email"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary">保存设置</el-button>
+                            <el-button @click="save()" type="primary">保存设置</el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -42,15 +42,36 @@
 </template>
 
 <script>
+import store from '@/store'
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
       userInfo: {
         name: '',
         intro: '',
-        email: ''
+        email: '',
+        photo: ''
       },
       imageUrl: null
+    }
+  },
+  created () {
+    this.getUserInfo()
+  },
+  methods: {
+    async getUserInfo () {
+      const { data: { data } } = await this.$http.get('user/profile')
+      this.userInfo = data
+    },
+    async save () {
+      const { name, intro, email } = this.userInfo
+      await this.$http.patch('user/profile', { name, intro, email })
+      this.$message.success('保存设置成功')
+      const localUser = store.getUser()
+      localUser.name = name
+      store.setUser(localUser)
+      eventBus.$emit('updateName', name)
     }
   }
 }

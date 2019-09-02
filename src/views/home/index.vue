@@ -72,6 +72,8 @@
 
 <script>
 import store from '@/store'
+import eventBus from '@/eventBus'
+
 export default {
   data () {
     return {
@@ -102,6 +104,9 @@ export default {
     const user = store.getUser()
     this.name = user.name
     this.photo = user.photo
+    eventBus.$on('updateName', (name) => {
+      this.name = name
+    })
   }
 }
 </script>
