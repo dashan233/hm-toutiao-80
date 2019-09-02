@@ -1,7 +1,7 @@
 <template>
   <div class="img-container">
     <div class="img_btn" @click="openDialog">
-      <img src="../assets/images/default.png" alt />
+      <img :src="value||defaultImage" alt />
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="750px">
@@ -62,6 +62,7 @@ import defaultImage from '../assets/images/default.png'
 import store from '@/store'
 export default {
   name: 'my-image',
+  props: ['value'],
   data () {
     return {
       dialogVisible: false,
@@ -78,7 +79,7 @@ export default {
         Authorization: `Bearer ${store.getUser().token}`
       },
       uploadImageUrl: null,
-      confirmSrc: defaultImage
+      defaultImage
     }
   },
   methods: {
@@ -91,7 +92,7 @@ export default {
         if (!this.uploadImageUrl) return this.$message.info('请上传图片')
         src = this.uploadImageUrl
       }
-      this.confirmSrc = src
+      this.$emit('input', src)
       this.dialogVisible = false
     },
     handleSuccess (res) {
@@ -130,7 +131,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.img-container {
+  display: inline-block;
+  margin: 0 8px;
+}
 .img_btn {
+  display: inline-block;
   width: 160px;
   height: 160px;
   border: 1px dashed #ddd;
