@@ -23,7 +23,7 @@
           <div v-if="articleForm.cover.type === 1">
             <my-image v-model="articleForm.cover.images[0]"></my-image>
           </div>
-          <div v-if="articleForm.cover.type===3">
+          <div v-if="articleForm.cover.type === 3">
             <my-image v-model="articleForm.cover.images[0]"></my-image>
             <my-image v-model="articleForm.cover.images[1]"></my-image>
             <my-image v-model="articleForm.cover.images[2]"></my-image>
@@ -120,7 +120,7 @@ export default {
       this.articleForm = data
     },
     async update (draft) {
-      await this.$http.post(`articles/${this.articleId}?draft=${draft}`, this.articleForm)
+      await this.$http.put(`articles/${this.articleId}?draft=${draft}`, this.articleForm)
       this.$message.success(draft ? '存入草稿成功' : '修改成功')
       this.$router.push('/article')
     },

@@ -9,8 +9,12 @@
                 <el-col :span="12">
                     <!-- 表单 -->
                     <el-form label-width="120px">
-                        <el-form-item label="编号："></el-form-item>
-                        <el-form-item label="手机："></el-form-item>
+                        <el-form-item label="编号：">
+                          <span>{{userInfo.id}}</span>
+                        </el-form-item>
+                        <el-form-item label="手机：">
+                          <span>{{userInfo.mobile}}</span>
+                        </el-form-item>
                         <el-form-item label="媒体名称：">
                             <el-input v-model="userInfo.name"></el-input>
                         </el-form-item>
@@ -49,10 +53,12 @@ export default {
   data () {
     return {
       userInfo: {
+        id: '',
         name: '',
         intro: '',
         email: '',
-        photo: ''
+        photo: '',
+        mobile: ''
       },
       imageUrl: null
     }
@@ -75,6 +81,7 @@ export default {
     },
     async getUserInfo () {
       const { data: { data } } = await this.$http.get('user/profile')
+      console.log(data)
       this.userInfo = data
     },
     async save () {
