@@ -157,6 +157,7 @@ export default {
       const {
         data: { data }
       } = await this.$http.get('articles', { params: this.reqParams })
+      console.log(data.results)
       this.articles = data.results
       this.total = data.total_count
     }
